@@ -1,0 +1,64 @@
+name: Feature Request
+description: Propose a new feature, runtime probe, project check, or CLI improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an enhancement to EnvDoctor!
+        Please describe the problem you are trying to solve and how you envision the new feature working.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem or limitation? A clear and concise description of what the problem is.
+      placeholder: "e.g., I'm always frustrated when trying to diagnose projects using Bun because EnvDoctor only detects Node.js..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution / Feature
+      description: Describe the solution or capability you would like to see added.
+      placeholder: "e.g., Add a new check for `bun.lockb` / `bunfig.toml` and runtime probe for `bun --version`..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category / Area
+      description: Which area of EnvDoctor does this request target?
+      options:
+        - "Runtime & Compiler Diagnostics (e.g., runtimes.py)"
+        - "Project Type & Framework Checks (e.g., checks/)"
+        - "Dependency Management & Health (e.g., deps.py)"
+        - "System & Hardware Probing (e.g., system.py)"
+        - "Environment Variables & Secrets Auditing (e.g., envfiles.py)"
+        - "CLI Interface & Reporting (e.g., cli.py, report.py)"
+        - "Configuration & Presets (e.g., config.py)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions, workarounds, or features you've considered.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context & Examples
+      description: Add any other context, CLI output mocks, documentation references, or screenshots.
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be interested in submitting a pull request to implement this feature!

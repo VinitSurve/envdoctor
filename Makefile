@@ -2,7 +2,7 @@ PY ?= python3
 VENV ?= .venv
 BIN := $(VENV)/bin
 
-.PHONY: dev lint format typecheck test build check clean
+.PHONY: dev lint format typecheck test build check release-dry-run clean
 
 dev:
 	$(PY) -m venv $(VENV)
@@ -29,6 +29,18 @@ check: lint
 	$(BIN)/ruff format --check src tests
 	$(BIN)/mypy
 	$(BIN)/pytest -v
+
+release-dry-run: clean build
+	@echo "Validating built distribution packages..."
+	$(BIN)/python -m pip install --dry-run dist/*.whl
+	@echo "Checking package metadata..."
+	@if $(BIN)/python -c "import twine" 2>/dev/null; then \
+		$(BIN)/twine check --strict dist/*; \
+	else \
+		echo "twine not installed; skipping twine check"; \
+	fi
+	@echo "Release dry-run successful. Artifacts generated in dist/:"
+	@ls -la dist/
 
 clean:
 	rm -rf dist build .pytest_cache .mypy_cache .ruff_cache

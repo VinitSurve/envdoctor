@@ -1,0 +1,62 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pip-audit:
+    name: Dependency Security Audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies and pip-audit
+        run: |
+          python -m pip install --upgrade pip
+          pip install . pip-audit
+
+      - name: Run pip-audit
+        id: audit
+        run: |
+          set +e
+          pip-audit -f json -o pip-audit.json .
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          pip-audit . || true
+          exit 0
+
+      - name: Convert pip-audit results to SARIF
+        run: |
+          python3 .github/scripts/pip_audit_to_sarif.py pip-audit.json pip-audit.sarif
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3.28.11
+        if: always()
+        with:
+          sarif_file: pip-audit.sarif
+
+      - name: Enforce vulnerability check
+        if: steps.audit.outputs.exit_code != '0'
+        run: |
+          echo "pip-audit detected vulnerabilities! Review SARIF and build logs."
+          exit 1

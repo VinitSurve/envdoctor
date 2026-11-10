@@ -40,6 +40,7 @@ dev = [
   "ruff>=0.4.0",
   "mypy>=1.10.0",
   "build>=1.2.0",
+  "twine>=5.0.0",
 ]
 
 [project.scripts]
@@ -47,14 +48,17 @@ envdoctor = "envdoctor.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/VinitSurve/envdoctor"
-Repository = "https://github.com/VinitSurve/envdoctor"
-Issues = "https://github.com/VinitSurve/envdoctor/issues"
+Documentation = "https://github.com/VinitSurve/envdoctor#readme"
+Source = "https://github.com/VinitSurve/envdoctor"
+"Bug Tracker" = "https://github.com/VinitSurve/envdoctor/issues"
+Funding = "https://github.com/sponsors/VinitSurve"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/envdoctor"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 timeout = 120
 markers = [
   "slow: slow tests",
